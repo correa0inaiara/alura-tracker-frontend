@@ -35,7 +35,6 @@ export default defineComponent({
       this.$emit('aoConfirmarAcaoModal', this.projetoId)
     },
     modalCancelaClicado() {
-      console.log('this.projeto', this.projetoId)
       this.$emit('aoCancelarAcaoModal', this.projetoId)
     },
   },

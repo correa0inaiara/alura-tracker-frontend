@@ -32,10 +32,6 @@ export const store = createStore<Estado>({
       state.projetos.push(projeto)
 
       notificacaoMixin.methods.notificar(TipoNotificacao.SUCESSO, 'Seu novo projeto foi salvo', 'Seu projeto já está disponível.')
-
-      
-      console.log('adiciona_projeto')
-      console.log('state.projetos', state.projetos)
     },
     [ALTERA_PROJETO](state: Estado, projeto: IProjeto) {
       const index = state.projetos.findIndex((proj) => proj.id == projeto.id)
@@ -50,13 +46,9 @@ export const store = createStore<Estado>({
       notificacaoMixin.methods.notificar(TipoNotificacao.SUCESSO, 'Sua edição foi salva', 'Seu projeto e todas as tarefas desse projeto foram atualizadas com sucesso.')
     },
     [EXCLUI_PROJETO](state: Estado, projetoId: string) {
-      console.log('exclui projeto')
-      console.log('projetoId', projetoId)
       state.projetos = state.projetos.filter((_projeto) => _projeto.id != projetoId)
       state.tarefas = state.tarefas.filter((tarefa) => tarefa.projeto.id != projetoId)
 
-      console.log('state.projetos', state.projetos)
-      console.log('state.tarefas', state.tarefas)
       notificacaoMixin.methods.notificar(TipoNotificacao.SUCESSO, 'Projeto deletado', 'Seu projeto e todas as tarefas vinculadas foram deletadas com sucesso.')
     },
     [NOTIFICAR](state, novaNotificacao: INotificacao) {
