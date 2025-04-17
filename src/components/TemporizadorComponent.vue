@@ -12,7 +12,7 @@ import CronometroComponent from './CronometroComponent.vue';
 import ControleTemporizador from './ControleTemporizador.vue';
 import { minhaUseStore } from '@/store';
 import { TipoNotificacao } from '@/interfaces/INotificacao';
-import { notificacaoMixin } from '@/mixins/notificar';
+import useNotificador from '@/hooks/notificador'
 
 export default defineComponent({
   name: 'TemporizadorComponent',
@@ -30,18 +30,19 @@ export default defineComponent({
   },
   setup() {
     const store = minhaUseStore()
+    const { notificar } = useNotificador()
     return {
-      store
+      store,
+      notificar
     }
   },
-  mixins: [notificacaoMixin],
   methods: {
     handleTemporizador(controle: string): void {
       if (!this.projetoSelecionado) {
         this.notificar(
+          TipoNotificacao.ATENCAO,
           'Atenção! Tarefa Sem Projeto',
-          'Sua tarefa precisa estar atrelada a um projeto.',
-          TipoNotificacao.ATENCAO
+          'Sua tarefa precisa estar atrelada a um projeto.'
         )
         return
       }

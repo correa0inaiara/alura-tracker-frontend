@@ -37,6 +37,7 @@ export default defineComponent({
         projeto: this.projetos.find((projeto) => projeto.id == this.idProjeto)
       })
       this.descricao = ''
+      this.idProjeto = ''
     },
   },
   computed: {

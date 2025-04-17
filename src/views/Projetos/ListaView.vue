@@ -15,7 +15,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="projeto in projetos" :key="projeto.id">
+        <tr v-for="projeto in store.state.projetos" :key="projeto.id">
           <td>{{ projeto.id }}</td>
           <td>{{ projeto.nome }}</td>
           <td>
@@ -24,19 +24,20 @@
                 <i class="fas fa-pencil-alt"></i>
               </span>
             </RouterLink>
-            <button class="button is-danger ml-2" :data-target="modal.id" @click="abrirModal">
+            <button class="button is-danger ml-2" :data-target="modal.id" @click="abrirModal(projeto.id)">
               <span class="icon is-small">
                 <i class="fas fa-trash"></i>
               </span>
             </button>
-            <ModalComponent  
-              :modal="modal" 
-              @ao-confirmar-acao-modal="excluir(projeto.id)" 
-              @ao-cancelar-acao-modal="fecharModal" />
           </td>
         </tr>
       </tbody>
     </table>
+    <ModalComponent  
+      :modal="modal"
+      :projetoId="projetoId"
+      @ao-confirmar-acao-modal="excluir" 
+      @ao-cancelar-acao-modal="fecharModal" />
   </section>
 </template>
 
@@ -52,24 +53,30 @@ export default defineComponent({
   components: { ModalComponent },
   emits: ['aoConfirmarAcaoModal', 'aoCancelarAcaoModal'],
   methods: {
-    abrirModal() {
+    abrirModal(projetoId: string) {
+      this.projetoId = projetoId
       this.store.commit(ABRE_MODAL, this.modal)
     },
     fecharModal() {
       this.store.commit(FECHA_MODAL, this.modal)
     },
-    excluir(id: string) {
-      this.store.commit(EXCLUI_PROJETO, id)
+    excluir(projetoId: string) {
+      this.store.commit(EXCLUI_PROJETO, projetoId)
+      this.fecharModal()
     }
   },
   data() {
     return {
       modal: {
         titulo: 'Excluir Projeto',
-        texto: 'Você tem certeza que deseja excluir esse projeto?',
+        texto: `
+          Você tem certeza que deseja excluir esse projeto?
+          \n\nObs.: Todas as tarefas atribuídas a esse projeto também serão removidas
+        `,
         labelBotaoConfirma: 'Sim',
         labelBotaoCancela: 'Não',
-      } as IModal
+      } as IModal,
+      projetoId: ''
     }
   },
   setup() {

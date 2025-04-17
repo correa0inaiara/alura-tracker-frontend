@@ -4,7 +4,7 @@ import { NOTIFICAR } from "@/store/tipo-mutacoes"
 
 export const notificacaoMixin = {
   methods: {
-    notificar(titulo: string, texto: string, tipo: TipoNotificacao) {
+    notificar(tipo: TipoNotificacao, titulo: string, texto: string) {
       store.commit(NOTIFICAR, {
         titulo,
         texto,

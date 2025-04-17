@@ -3,7 +3,7 @@
   <Transition>
     <div v-if="!listaEstaVazia" class="lista">
       <p class="lista__texto">Suas tarefas:</p>
-      <TarefaComponent v-for="(tarefa, index) in tarefas" :key="index" :tarefa="tarefa" />
+      <TarefaComponent v-for="(tarefa, index) in store.state.tarefas" :key="index" :tarefa="tarefa" />
     </div>
     <div v-else-if="listaEstaVazia" class="wrapper">
       <div class="sem-tarefas">
@@ -14,19 +14,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
 import FormularioComponent from '../components/FormularioComponent.vue';
 import TarefaComponent from '../components/TarefaComponent.vue';
 import ITarefa from '../interfaces/ITarefa';
+import { minhaUseStore } from '@/store';
+import { SALVA_TAREFA } from '@/store/tipo-mutacoes';
 
 export default defineComponent({
   name: 'TarefasView',
   components: { FormularioComponent, TarefaComponent },
-  data() {
-    return {
-      tarefas: [] as ITarefa[]
-    }
-  },
+  // data() {
+  //   return {
+  //     tarefas: [] as ITarefa[]
+  //   }
+  // },
   computed: {
     listaEstaVazia(): boolean {
       return this.tarefas.length === 0
@@ -34,7 +36,15 @@ export default defineComponent({
   },
   methods: {
     salvarTarefa(tarefa: ITarefa): void {
-      this.tarefas.push(tarefa)
+      // this.tarefas.push(tarefa)
+      this.store.commit(SALVA_TAREFA, tarefa)
+    }
+  },
+  setup() {
+    const store = minhaUseStore()
+    return {
+      store,
+      tarefas: computed(() => store.state.tarefas)
     }
   }
 });

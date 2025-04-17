@@ -1,17 +1,14 @@
 <template>
-  <!-- <Transition> -->
-    <div class="notificacoes">
-      <article class="message" :class="contexto[notificacao.tipo]" v-for="notificacao in notificacoes" :key="notificacao.id">
-        <div class="message-header">
-          <p>{{notificacao.titulo}}</p>
-          <!-- <button class="delete" aria-label="delete"></button> -->
-        </div>
-        <div class="message-body">
-          {{notificacao.texto}}
-        </div>
-      </article>
-    </div>
-  <!-- </Transition> -->
+  <TransitionGroup name="list" tag="div" class="notificacoes">
+    <article class="message" :class="contexto[notificacao.tipo]" v-for="notificacao in notificacoes" :key="notificacao.id">
+      <div class="message-header">
+        <p>{{notificacao.titulo}}</p>
+      </div>
+      <div class="message-body">
+        {{notificacao.texto}}
+      </div>
+    </article>
+  </TransitionGroup>
 </template>
 
 <script lang='ts'>

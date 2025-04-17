@@ -16,18 +16,16 @@
 </template>
 
 <script lang="ts">
-import { TipoNotificacao } from '@/interfaces/INotificacao';
-import { notificacaoMixin } from '@/mixins/notificar';
 import { minhaUseStore } from '@/store';
 import { ADICIONA_PROJETO, ALTERA_PROJETO } from '@/store/tipo-mutacoes';
 import { defineComponent } from 'vue';
+import useNotificador from '@/hooks/notificador'
 
 export default defineComponent({
   name: 'FormularioView',
   props: {
     id: { type: String }
   },
-  mixins: [notificacaoMixin],
   mounted() {
     const _id = this.id || this.$route.params?.id
     if (_id) {
@@ -48,18 +46,8 @@ export default defineComponent({
           id: _id,
           nome: this.nomeDoProjeto
         })
-        this.notificar(
-          'Sua edição foi salva',
-          'Seu projeto foi atualizado',
-          TipoNotificacao.SUCESSO
-        )
       } else {
         this.store.commit(ADICIONA_PROJETO, this.nomeDoProjeto)
-        this.notificar(
-          'Seu novo projeto foi salvo',
-          'Seu projeto já está disponível',
-          TipoNotificacao.SUCESSO
-        )
       }
 
       this.nomeDoProjeto = ''
@@ -68,8 +56,10 @@ export default defineComponent({
   },
   setup() {
     const store = minhaUseStore()
+    const { notificar } = useNotificador()
     return {
-      store
+      store,
+      notificar
     }
   }
 })

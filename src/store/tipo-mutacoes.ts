@@ -6,3 +6,5 @@ export const NOTIFICAR = 'NOTIFICAR'
 
 export const ABRE_MODAL = 'ABRE_MODAL'
 export const FECHA_MODAL = 'FECHA_MODAL'
+
+export const SALVA_TAREFA = 'SALVA_TAREFA'

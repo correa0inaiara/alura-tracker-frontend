@@ -27,14 +27,16 @@ export default defineComponent({
   name: "ModalComponent",
   props: {
     modal: { type: Object as PropType<IModal>, required: true },
+      projetoId: { type: String, required: true },
   },
   emits: ['aoConfirmarAcaoModal', 'aoCancelarAcaoModal'],
   methods: {
     modalConfirmaClicado() {
-      this.$emit('aoConfirmarAcaoModal', this.modal)
+      this.$emit('aoConfirmarAcaoModal', this.projetoId)
     },
     modalCancelaClicado() {
-      this.$emit('aoCancelarAcaoModal', this.modal)
+      console.log('this.projeto', this.projetoId)
+      this.$emit('aoCancelarAcaoModal', this.projetoId)
     },
   },
   computed: {
