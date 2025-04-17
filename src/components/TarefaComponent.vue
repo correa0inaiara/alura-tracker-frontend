@@ -3,8 +3,13 @@
     <div class="tarefas columns">
       <div class="column is-7">
         <span class="display">
+          <i class="fa-solid fa-list-check"></i> 
           {{ tarefa.descricao || 'Tarefa sem descrição' }}
         </span>
+      </div>
+      <div class="column">
+        <span><i class="fa-solid fa-diagram-project"></i></span>
+        <span class="ml-1">{{ tarefa.projeto.nome }}</span>
       </div>
       <div class="column">
         <CronometroComponent :tempo-em-segundos="tarefa.duracaoEmSegundos" />

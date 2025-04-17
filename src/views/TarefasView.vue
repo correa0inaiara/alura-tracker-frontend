@@ -88,14 +88,4 @@ export default defineComponent({
 .lista__texto {
   margin-bottom: 30px;
 }
-
-.v-enter-active,
-.v-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
-}
 </style>

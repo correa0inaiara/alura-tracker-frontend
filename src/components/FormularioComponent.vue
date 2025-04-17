@@ -13,7 +13,7 @@
         </div>
       </div>
       <div class="column">
-        <TemporizadorComponent @ao-temporizador-finalizado="finalizarTarefa" />
+        <TemporizadorComponent :projetoSelecionado="projetoSelecionado" @ao-temporizador-finalizado="finalizarTarefa" />
       </div>
     </div>
   </div>
@@ -39,6 +39,12 @@ export default defineComponent({
       this.descricao = ''
     },
   },
+  computed: {
+    projetoSelecionado(): boolean {
+      if (!this.idProjeto) return false
+      else return true
+    }
+  },
   data () {
     return {
       descricao: '',
@@ -48,6 +54,7 @@ export default defineComponent({
   setup() {
     const store = useStore(key)
     return {
+      store,
       projetos: computed(() => store.state.projetos)
     }
   }

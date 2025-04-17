@@ -10,10 +10,16 @@
 import { defineComponent } from 'vue';
 import CronometroComponent from './CronometroComponent.vue';
 import ControleTemporizador from './ControleTemporizador.vue';
+import { minhaUseStore } from '@/store';
+import { TipoNotificacao } from '@/interfaces/INotificacao';
+import { notificacaoMixin } from '@/mixins/notificar';
 
 export default defineComponent({
   name: 'TemporizadorComponent',
   emits: ['aoTemporizadorFinalizado'],
+  props: {
+    projetoSelecionado: { type: Boolean, default: false }
+  },
   components: { CronometroComponent, ControleTemporizador },
   data () {
     return {
@@ -22,8 +28,24 @@ export default defineComponent({
       cronometroRodando: false
     }
   },
+  setup() {
+    const store = minhaUseStore()
+    return {
+      store
+    }
+  },
+  mixins: [notificacaoMixin],
   methods: {
     handleTemporizador(controle: string): void {
+      if (!this.projetoSelecionado) {
+        this.notificar(
+          'Atenção! Tarefa Sem Projeto',
+          'Sua tarefa precisa estar atrelada a um projeto.',
+          TipoNotificacao.ATENCAO
+        )
+        return
+      }
+
       if (controle == 'play') {
         this.iniciar()
       } else {
