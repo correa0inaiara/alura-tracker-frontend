@@ -1,16 +1,4 @@
 <template>
-<!-- <button class="button" @click="iniciar" :disabled="cronometroRodando">
-  <span class="icon">
-    <i class="fas fa-play"></i>
-  </span>
-  <span>play</span>
-</button>
-<button class="button" @click="finalizar" :disabled="!cronometroRodando">
-  <span class="icon">
-    <i class="fas fa-stop"></i>
-  </span>
-  <span>stop</span>
-</button> -->
 <button class="button" @click="handleControle" :disabled="estadoCronometro">
   <span class="icon">
     <i :class="icone"></i>
@@ -48,5 +36,9 @@ export default defineComponent({
 </script>
 
 <style scoped>
-
+.button {
+  color: var(--texto-primario);
+  background-color: var(--bg-primario);
+  border-color: var(--texto-primario);
+}
 </style>

@@ -1,7 +1,11 @@
 <template>
   <BoxComponent>
-    <div class="columns">
-      <div class="column is-7">{{ tarefa.descricao || 'Tarefa sem descrição' }}</div>
+    <div class="tarefas columns">
+      <div class="column is-7">
+        <span class="display">
+          {{ tarefa.descricao || 'Tarefa sem descrição' }}
+        </span>
+      </div>
       <div class="column">
         <CronometroComponent :tempo-em-segundos="tarefa.duracaoEmSegundos" />
       </div>
@@ -28,8 +32,10 @@ export default defineComponent({
 
 </script>
 
-<style scoped>
-.columns {
-  color: var(--texto-primario);
+<style>
+#app .tarefas .display,
+#app .modo-escuro .tarefas .display {
+  color: #2d2d2d;
+  background-color: transparent;
 }
 </style>

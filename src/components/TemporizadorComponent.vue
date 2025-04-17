@@ -1,5 +1,5 @@
 <template>
-  <div class="is-flex is-align-items-center is-justify-content-space-between">
+  <div class="temporizador is-flex is-align-items-center is-justify-content-space-between">
     <CronometroComponent :tempoEmSegundos="tempoEmSegundos" />
     <ControleTemporizador :icone="'fas fa-play'" :texto="'play'" :cronometroRodando="cronometroRodando" @botaoTemporizador="handleTemporizador" />
     <ControleTemporizador :icone="'fas fa-stop'" :texto="'stop'" :cronometroRodando="cronometroRodando" @botaoTemporizador="handleTemporizador" />
@@ -31,14 +31,12 @@ export default defineComponent({
       }
     },
     iniciar (): void {
-      console.log('iniciando')
       this.cronometroRodando = true
       this.cronometro = setInterval(() => {
         this.tempoEmSegundos += 1
       }, 1000)
     },
     finalizar (): void {
-      console.log('finalizando')
       this.cronometroRodando = false
       this.$emit('aoTemporizadorFinalizado', this.tempoEmSegundos)
       clearInterval(this.cronometro)
@@ -47,3 +45,6 @@ export default defineComponent({
   },
 })
 </script>
+
+<style>
+</style>
