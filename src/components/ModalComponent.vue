@@ -27,7 +27,7 @@ export default defineComponent({
   name: "ModalComponent",
   props: {
     modal: { type: Object as PropType<IModal>, required: true },
-      projetoId: { type: String, required: true },
+    projetoId: { type: String, required: true }
   },
   emits: ['aoConfirmarAcaoModal', 'aoCancelarAcaoModal'],
   methods: {

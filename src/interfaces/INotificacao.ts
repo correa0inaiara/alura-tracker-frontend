@@ -5,8 +5,8 @@ export enum TipoNotificacao {
 }
 
 export default interface INotificacao {
+  id: number;
   titulo: string;
   texto: string;
   tipo: TipoNotificacao,
-  id: number
 }

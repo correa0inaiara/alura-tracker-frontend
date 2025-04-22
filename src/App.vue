@@ -36,6 +36,7 @@ export default defineComponent({
 #app {
   --bg-primario: #fff;
   --texto-primario: #2d2d2d;
+  background-color: #0d3b66;
 }
 
 #app .modo-escuro {

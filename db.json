@@ -1,0 +1,99 @@
+{
+  "tarefas": [
+    {
+      "id": "1",
+      "duracaoEmSegundos": 110,
+      "descricao": "Primeira tarefa - teste",
+      "projeto": {
+        "id": 1,
+        "nome": "Alura Tracker"
+      }
+    },
+    {
+      "id": "2",
+      "duracaoEmSegundos": 400,
+      "descricao": "Segunda tarefa",
+      "projeto": {
+        "id": 1,
+        "nome": "Alura Tracker"
+      }
+    },
+    {
+      "id": "3",
+      "duracaoEmSegundos": 350,
+      "descricao": "Estudos com Vue",
+      "projeto": {
+        "id": 2,
+        "nome": "Plano de Estudos"
+      }
+    },
+    {
+      "id": "4",
+      "duracaoEmSegundos": 450,
+      "descricao": "Desenvimento de Web Services em Java",
+      "projeto": {
+        "id": 2,
+        "nome": "Plano de Estudos"
+      }
+    },
+    {
+      "id": "5",
+      "duracaoEmSegundos": 700,
+      "descricao": "Desenvimento de Games em JavaScript",
+      "projeto": {
+        "id": 3,
+        "nome": "Desenvolvimento de Games em JavaScript"
+      }
+    },
+    {
+      "id": "6",
+      "duracaoEmSegundos": 1200,
+      "descricao": "Criação de Sprites",
+      "projeto": {
+        "id": 3,
+        "nome": "Desenvolvimento de Games em JavaScript"
+      }
+    },
+    {
+      "id": "abfd",
+      "duracaoEmSegundos": 5,
+      "descricao": "refatoração do vuejs",
+      "projeto": {
+        "id": "2",
+        "nome": "Plano de Estudos"
+      }
+    }
+  ],
+  "projetos": [
+    {
+      "id": "1",
+      "nome": "Alura Tracker"
+    },
+    {
+      "id": "2",
+      "nome": "Plano de Estudos"
+    },
+    {
+      "id": "3",
+      "nome": "Desenvolvimento de Games em JavaScript"
+    },
+    {
+      "id": "0f0d",
+      "nome": "Novo Projeto"
+    },
+    {
+      "id": "7ed4",
+      "nome": "ByteBank 2"
+    },
+    {
+      "id": "a3e9",
+      "nome": "estudos pessoais"
+    },
+    {
+      "id": "f5b2",
+      "nome": "TESTE DE NOVO PROJETO 2"
+    }
+  ],
+  "notificacoes": [],
+  "modais": []
+}

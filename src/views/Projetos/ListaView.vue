@@ -15,7 +15,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="projeto in store.state.projetos" :key="projeto.id">
+        <tr v-for="projeto in store.state.projeto.projetos" :key="projeto.id">
           <td>{{ projeto.id }}</td>
           <td>{{ projeto.nome }}</td>
           <td>
@@ -44,9 +44,12 @@
 <script lang="ts">
 import ModalComponent from '@/components/ModalComponent.vue';
 import IModal from '@/interfaces/IModal';
+import { TipoNotificacao } from '@/interfaces/INotificacao';
 import { minhaUseStore } from '@/store';
-import { ABRE_MODAL, EXCLUI_PROJETO, FECHA_MODAL } from '@/store/tipo-mutacoes';
+import { REMOVER_PROJETO } from '@/store/tipo-acoes';
+import { ABRE_MODAL, FECHA_MODAL } from '@/store/tipo-mutacoes';
 import { computed, defineComponent } from 'vue';
+import useNotificador from '@/hooks/notificador'
 
 export default defineComponent({
   name: 'ListaView',
@@ -58,10 +61,17 @@ export default defineComponent({
       this.store.commit(ABRE_MODAL, this.modal)
     },
     fecharModal() {
+      // commit é para mutations
       this.store.commit(FECHA_MODAL, this.modal)
     },
     excluir(projetoId: string) {
-      this.store.commit(EXCLUI_PROJETO, projetoId)
+      this.store.dispatch(REMOVER_PROJETO, projetoId)
+        .then(() => {
+            this.notificar(TipoNotificacao.SUCESSO, 'Projeto deletado', 'Seu projeto e todas as tarefas vinculadas foram deletadas com sucesso.')
+        })
+        .catch((err) => {
+          this.notificar(TipoNotificacao.FALHA, 'Projeto não foi deletado', `Ocorreu um erro e seu projeto não pode ser deletado. \nMensagem de Erro: ${err}`)
+        })
       this.fecharModal()
     }
   },
@@ -79,11 +89,19 @@ export default defineComponent({
       projetoId: ''
     }
   },
+  created() {
+    console.log('created')
+  },
+  mounted() {
+    console.log('mounted')
+  },
   setup() {
     const store = minhaUseStore()
+    const { notificar } = useNotificador()
     return {
-      projetos: computed(() => store.state.projetos),
-      store
+      projetos: computed(() => store.state.projeto.projetos),
+      store,
+      notificar
     }
   }
 })

@@ -17,9 +17,10 @@
 
 <script lang="ts">
 import { minhaUseStore } from '@/store';
-import { ADICIONA_PROJETO, ALTERA_PROJETO } from '@/store/tipo-mutacoes';
 import { defineComponent } from 'vue';
 import useNotificador from '@/hooks/notificador'
+import { ALTERAR_PROJETO, CADASTRAR_PROJETOS } from '@/store/tipo-acoes';
+import { TipoNotificacao } from "@/interfaces/INotificacao";
 
 export default defineComponent({
   name: 'FormularioView',
@@ -29,7 +30,7 @@ export default defineComponent({
   mounted() {
     const _id = this.id || this.$route.params?.id
     if (_id) {
-      const projeto = this.store.state.projetos.find((projeto) => projeto.id == _id)
+      const projeto = this.store.state.projeto.projetos.find((projeto) => projeto.id == _id)
       this.nomeDoProjeto = projeto?.nome || ''
     }
   },
@@ -42,16 +43,26 @@ export default defineComponent({
     salvar() {
       const _id = this.id || this.$route.params?.id
       if (_id) {
-        this.store.commit(ALTERA_PROJETO, {
+        this.store.dispatch(ALTERAR_PROJETO, {
           id: _id,
           nome: this.nomeDoProjeto
+        }).then(() => {
+          this.notificar(TipoNotificacao.SUCESSO, 'Sua edição foi salva', 'Seu projeto e todas as tarefas desse projeto foram atualizadas com sucesso.')
+          this.$router.push('/projetos')
+        }).catch((err) => {
+          this.notificar(TipoNotificacao.FALHA, 'Sua edição não ocorreu', `Ocorreu um erro na edição do seu projeto.\nMensagem de Erro: ${err}`)
         })
       } else {
-        this.store.commit(ADICIONA_PROJETO, this.nomeDoProjeto)
+        this.store.dispatch(CADASTRAR_PROJETOS, this.nomeDoProjeto)
+          .then(() => {
+            this.nomeDoProjeto = ''
+            this.notificar(TipoNotificacao.SUCESSO, 'Seu novo projeto foi salvo', 'Seu projeto já está disponível.')
+            this.$router.push('/projetos')
+          }).catch((err) => {
+            this.notificar(TipoNotificacao.FALHA, 'Seu novo projeto não pode ser criado', `Ocorreu um erro ao salvar seu novo projeto.\nMensagem de Erro: ${err}`)
+          })
       }
 
-      this.nomeDoProjeto = ''
-      this.$router.push('/projetos')
     }
   },
   setup() {

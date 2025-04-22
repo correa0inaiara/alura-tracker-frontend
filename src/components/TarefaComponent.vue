@@ -1,6 +1,6 @@
 <template>
   <BoxComponent>
-    <div class="tarefas columns">
+    <div class="tarefas columns clicavel" @click="tarefaClicada">
       <div class="column is-6">
         <span class="display">
           <i class="fa-solid fa-list-check"></i> 
@@ -28,11 +28,17 @@ import BoxComponent from './BoxComponent.vue';
 
 export default defineComponent({
   name: 'TarefaComponent',
+  emits: ['aoTarefaClicada'],
   components: { CronometroComponent, BoxComponent },
   props: {
     tarefa: {
       type: Object as PropType<ITarefa>,
       required: true
+    }
+  },
+  methods: {
+    tarefaClicada(): void {
+      this.$emit('aoTarefaClicada', this.tarefa)
     }
   }
 })
@@ -44,5 +50,9 @@ export default defineComponent({
 #app .modo-escuro .tarefas .display {
   color: #2d2d2d;
   background-color: transparent;
+}
+
+.clicavel {
+  cursor: pointer;
 }
 </style>
