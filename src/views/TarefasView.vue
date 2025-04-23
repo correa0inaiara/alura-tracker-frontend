@@ -1,101 +1,137 @@
 <template>
   <FormularioComponent @ao-salvar-tarefa="salvarTarefa" />
   <Transition>
-    <div v-if="!listaEstaVazia" class="lista">
+    <div v-if="!semTarefas" class="lista">
       <p class="lista__texto">Suas tarefas:</p>
-      <TarefaComponent v-for="(tarefa, index) in store.state.tarefa.tarefas" :key="index" :tarefa="tarefa" @ao-tarefa-clicada="selecionarTarefa" />
+
+      <div class="field mb-5">
+        <p class="control has-icons-left">
+          <input class="input" type="email" placeholder="Digite para filtrar" v-model="filtro" />
+          <span class="icon is-small is-left">
+            <i class="fa-solid fa-filter"></i>
+          </span>
+        </p>
+      </div>
+
+      <TarefaComponent v-for="(tarefa, index) in tarefasFiltradas" :key="index" :tarefa="tarefa"
+        @ao-tarefa-clicada="selecionarTarefa" />
     </div>
-    <div v-else-if="listaEstaVazia" class="wrapper">
+    <div v-else-if="semTarefas" class="wrapper">
       <div class="sem-tarefas">
         <p class="sem-tarefas__texto">Sem tarefas!</p>
       </div>
     </div>
   </Transition>
-  <div class="modal" :class="{'is-active': tarefaSelecionada}" v-if="tarefaSelecionada">
-    <div class="modal-background"></div>
-    <div class="modal-card">
-      <header class="modal-card-head">
-        <p class="modal-card-title">Editando uma tarefa</p>
-        <button @click="fecharModal" class="delete" aria-label="close"></button>
-      </header>
-      <section class="modal-card-body">
-        <label for="descricaoDaTarefa" class="label">Descrição da Tarefa</label>
-        <input type="text" class="input" v-model="tarefaSelecionada.descricao" placeholder="Digite uma nova descrição para a tarefa" id="descricaoDaTarefa">
-      </section>
-      <footer class="modal-card-foot">
-        <div class="buttons">
-          <button @click="alterarTarefa" class="button is-success">Salvar alterações</button>
-          <button @click="fecharModal" class="button">Cancelar</button>
-        </div>
-      </footer>
-    </div>
-  </div>
+  <ModalComponent :mostrar="tarefaSelecionada != null">
+    <template v-slot:cabecalho>
+      <p class="modal-card-title">Editando uma tarefa</p>
+      <button @click="fecharModal" class="delete" aria-label="close"></button>
+    </template>
+    <template v-slot:corpo>
+      <label for="descricaoDaTarefa" class="label">Descrição da Tarefa</label>
+      <input type="text" class="input" v-model="tarefaSelecionada.descricao"
+        placeholder="Digite uma nova descrição para a tarefa" id="descricaoDaTarefa">
+    </template>
+    <template v-slot:rodape>
+      <div class="buttons">
+        <button @click="alterarTarefa" class="button is-success">Salvar alterações</button>
+        <button @click="fecharModal" class="button">Cancelar</button>
+      </div>
+    </template>
+  </ModalComponent>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent, ref, watchEffect } from 'vue';
 import FormularioComponent from '../components/FormularioComponent.vue';
 import TarefaComponent from '../components/TarefaComponent.vue';
 import { minhaUseStore } from '@/store';
 import useNotificador from '@/hooks/notificador'
-import { ALTERAR_TAREFA, CADASTRAR_TAREFA, OBTER_PROJETOS, OBTER_TAREFAS } from '@/store/tipo-acoes';
+import { ALTERAR_TAREFA, CADASTRAR_TAREFA, FILTRAR_TAREFAS, OBTER_PROJETOS, OBTER_TAREFAS } from '@/store/tipo-acoes';
 import { TipoNotificacao } from '@/interfaces/INotificacao';
 import ITarefa from '@/interfaces/ITarefa';
+import ModalComponent from '@/components/ModalComponent.vue';
 
 export default defineComponent({
   name: 'TarefasView',
-  components: { FormularioComponent, TarefaComponent },
-  computed: {
-    listaEstaVazia(): boolean {
-      return this.tarefas.length === 0
-    }
-  },
-  methods: {
-    salvarTarefa(tarefa: ITarefa): void {
-      this.store.dispatch(CADASTRAR_TAREFA, tarefa)
-    },
-    selecionarTarefa(tarefa: ITarefa) {
-      this.tarefaSelecionada = tarefa
-    },
-    fecharModal() {
-      this.tarefaSelecionada = null
-    },
-    alterarTarefa() {
-      this.store.dispatch(ALTERAR_TAREFA, this.tarefaSelecionada)
-        .then(() => {
-          this.fecharModal()
-          this.notificar(TipoNotificacao.SUCESSO, "Tarefa Atualizada", "Sua tarefa foi atualizada")
-        })
-        .catch((err) => {
-          this.notificar(TipoNotificacao.FALHA, "Tarefa Não Atualizada", `Ocorreu um erro e sua tarefa não pode ser atualizada.\nMensagem de Erro: ${err}`)
-        })
-    }
-  },
-  data() {
-    return {
-      tarefaSelecionada: null as ITarefa | null
-    }
-  },
+  components: { FormularioComponent, TarefaComponent, ModalComponent },
   setup() {
     const store = minhaUseStore()
     const { notificar } = useNotificador()
+
+    const tarefaSelecionada = ref()
+
+    const lidarComSucesso = (isTarefas: boolean) => {
+      const titulo = isTarefas ? 'Lista de Tarefas Carregada' : 'Lista de Projetos Carregada'
+      const texto = isTarefas ? 'Sua lista de tarefas já está pronta para uso.' : 'Sua lista de projetos já está pronta para uso.'
+      notificar(TipoNotificacao.SUCESSO, titulo, texto)
+    }
+
+    const lidarComFalha = (isTarefas: boolean, err: Error) => {
+      const titulo = isTarefas ? 'Lista de Tarefas Não Pode Ser Carregada' : 'Lista de Projetos Não Pode Ser Carregada'
+      const texto = 'Ocorreu um erro ao carregar a sua lista.\n\nError Message: ' + err
+      notificar(TipoNotificacao.FALHA, titulo, texto)
+    }
+
     // dispatch é para actions
     store.dispatch(OBTER_PROJETOS)
-      .then(() => {
-        notificar(TipoNotificacao.SUCESSO, 'Lista de Projetos Carregada com Sucesso', 'Sua lista de projetos já está pronta para uso.')
-      }).catch((err) => {
-        notificar(TipoNotificacao.FALHA, 'Lista de Projetos Não Carregada', `Ocorreu um erro ao carregar a sua lista de projetos.\nError Message: ${err}`)
-      })
+      .then(() => lidarComSucesso(false)).catch((err) => lidarComFalha(false, err))
     store.dispatch(OBTER_TAREFAS)
-      .then(() => {
-        notificar(TipoNotificacao.SUCESSO, 'Lista de Projetos Carregada com Sucesso', 'Sua lista de projetos já está pronta para uso.')
-      }).catch((err) => {
-        notificar(TipoNotificacao.FALHA, 'Lista de Projetos Não Carregada', `Ocorreu um erro ao carregar a sua lista de projetos.\nError Message: ${err}`)
-      })
+      .then(() => lidarComSucesso(true)).catch((err) => lidarComFalha(true, err))
+
+    // const tarefasFiltradas = computed(() => {
+    //   return store.state.tarefa?.tarefas?.filter(
+    //     (tarefa) => {
+    //       const _filtro = filtro.value.toLowerCase()
+    //       const _tarefa = tarefa.descricao.toLowerCase()
+    //       const _projeto = tarefa.projeto.nome.toLowerCase()
+    //       return !filtro.value || _tarefa.includes(_filtro) || _projeto.includes(_filtro)
+    //     }
+    //   ) || []
+    // })
+
+    const semTarefas = computed(() => {
+      return store.state.tarefa?.tarefas?.length === 0 || false
+    })
+
+    const filtro = ref("")
+
+    const salvarTarefa = async (tarefa: ITarefa): Promise<void> => {
+      await store.dispatch(CADASTRAR_TAREFA, tarefa)
+    }
+
+    const selecionarTarefa = (tarefa: ITarefa) => {
+      tarefaSelecionada.value = tarefa
+    }
+
+    const fecharModal = () => {
+      tarefaSelecionada.value = null
+    }
+
+    const alterarTarefa = () => {
+      store.dispatch(ALTERAR_TAREFA, tarefaSelecionada.value)
+        .then(() => {
+          fecharModal()
+          notificar(TipoNotificacao.SUCESSO, "Tarefa Atualizada", "Sua tarefa foi atualizada")
+        })
+        .catch((err) => {
+          notificar(TipoNotificacao.FALHA, "Tarefa Não Atualizada", `Ocorreu um erro e sua tarefa não pode ser atualizada.\nMensagem de Erro: ${err}`)
+        })
+    }
+
+    watchEffect(() => {
+      store.dispatch(FILTRAR_TAREFAS, filtro.value)
+    })
+
     return {
-      tarefas: computed(() => store.state.tarefa.tarefas),
-      store,
-      notificar
+      tarefasFiltradas: computed(() => store.state.tarefa.tarefasFiltradas || []),
+      tarefaSelecionada,
+      semTarefas,
+      filtro,
+      salvarTarefa,
+      selecionarTarefa,
+      alterarTarefa,
+      fecharModal
     }
   }
 });

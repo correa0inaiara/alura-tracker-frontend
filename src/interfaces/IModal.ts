@@ -6,5 +6,6 @@ export default interface IModal {
   texto: string;
   labelBotaoConfirma: string;
   labelBotaoCancela: string;
-  showModal: boolean
+  showModal: boolean;
+  projetoId: string;
 }

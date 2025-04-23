@@ -33,22 +33,27 @@ export const projeto: Module<EstadoProjeto, Estado> = {
     }
   },
   actions: {
-    [OBTER_PROJETOS]({ commit }) {
+    async [OBTER_PROJETOS]({ commit }) {
       return clienteHttp.get('projetos')
         .then((res) => commit(DEFINIR_PROJETOS, res.data))
     },
-    [CADASTRAR_PROJETOS]({ commit }, nomeDoProjeto: string) {
+    async [CADASTRAR_PROJETOS]({ commit }, nomeDoProjeto: string) {
       return clienteHttp.post('/projetos', {
         nome: nomeDoProjeto
       }).then((res) => commit(ADICIONA_PROJETO, res.data))
     },
-    [ALTERAR_PROJETO]({ commit }, projeto: IProjeto) {
+    async [ALTERAR_PROJETO]({ commit }, projeto: IProjeto) {
       return clienteHttp.put(`/projetos/${projeto.id}`, projeto)
         .then(() => commit(ALTERA_PROJETO, projeto))
     },
-    [REMOVER_PROJETO]({ commit }, projetoId: string) {
+    async [REMOVER_PROJETO]({ commit }, projetoId: string) {
       return clienteHttp.delete(`/projetos/${projetoId}`)
-        .then(() => commit(EXCLUI_PROJETO,))
+        .then(() => commit(EXCLUI_PROJETO, projetoId))
+    }
+  },
+  getters: {
+    projetos (state) {
+      return state.projetos
     }
   }
 }

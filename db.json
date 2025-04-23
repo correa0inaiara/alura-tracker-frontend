@@ -3,7 +3,7 @@
     {
       "id": "1",
       "duracaoEmSegundos": 110,
-      "descricao": "Primeira tarefa - teste",
+      "descricao": "Primeira tarefa - teste 24444",
       "projeto": {
         "id": 1,
         "nome": "Alura Tracker"
@@ -62,6 +62,24 @@
         "id": "2",
         "nome": "Plano de Estudos"
       }
+    },
+    {
+      "id": "66b0",
+      "duracaoEmSegundos": 0,
+      "descricao": "teste",
+      "projeto": {
+        "id": "3",
+        "nome": "Desenvolvimento de Games em JavaScript"
+      }
+    },
+    {
+      "id": "04c3",
+      "duracaoEmSegundos": 2,
+      "descricao": "testtesttest",
+      "projeto": {
+        "id": "32c8",
+        "nome": "test - update"
+      }
     }
   ],
   "projetos": [
@@ -78,10 +96,6 @@
       "nome": "Desenvolvimento de Games em JavaScript"
     },
     {
-      "id": "0f0d",
-      "nome": "Novo Projeto"
-    },
-    {
       "id": "7ed4",
       "nome": "ByteBank 2"
     },
@@ -90,8 +104,8 @@
       "nome": "estudos pessoais"
     },
     {
-      "id": "f5b2",
-      "nome": "TESTE DE NOVO PROJETO 2"
+      "id": "0aa7",
+      "nome": "projeto - tests de resolução dos erros"
     }
   ],
   "notificacoes": [],

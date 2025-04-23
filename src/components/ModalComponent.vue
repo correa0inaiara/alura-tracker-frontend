@@ -1,4 +1,21 @@
 <template>
+<div class="modal" :class="{'is-active': mostrar}" v-if="mostrar">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <slot name="cabecalho"></slot>
+    </header>
+    <section class="modal-card-body">
+      <slot name="corpo"></slot>
+    </section>
+    <footer class="modal-card-foot">
+      <slot name="rodape"></slot>
+    </footer>
+  </div>
+</div>
+</template>
+
+<!-- <template>
   <div :id="modal.id" class="modal" :style="exibirModal">
     <div class="modal-background"></div>
     <div class="modal-card">
@@ -17,33 +34,32 @@
       </footer>
     </div>
   </div>
-</template>
+</template> -->
 
 <script lang='ts'>
-import { defineComponent, PropType } from 'vue'
-import IModal from '@/interfaces/IModal'
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: "ModalComponent",
   props: {
-    modal: { type: Object as PropType<IModal>, required: true },
-    projetoId: { type: String, required: true }
+    mostrar: { type: Boolean, required: true },
+    // projetoId: { type: String, required: true }
   },
-  emits: ['aoConfirmarAcaoModal', 'aoCancelarAcaoModal'],
-  methods: {
-    modalConfirmaClicado() {
-      this.$emit('aoConfirmarAcaoModal', this.projetoId)
-    },
-    modalCancelaClicado() {
-      this.$emit('aoCancelarAcaoModal', this.projetoId)
-    },
-  },
-  computed: {
-    exibirModal() {
-      if (this.modal.showModal) return { display: 'block' }
-      else return { display: 'none' }
-    }
-  }
+  // emits: ['aoConfirmarAcaoModal', 'aoCancelarAcaoModal'],
+  // methods: {
+  //   modalConfirmaClicado() {
+  //     this.$emit('aoConfirmarAcaoModal', this.projetoId)
+  //   },
+  //   modalCancelaClicado() {
+  //     this.$emit('aoCancelarAcaoModal', this.projetoId)
+  //   },
+  // },
+  // computed: {
+  //   exibirModal() {
+  //     if (this.modal.showModal) return { display: 'block' }
+  //     else return { display: 'none' }
+  //   }
+  // }
 })
 </script>
 

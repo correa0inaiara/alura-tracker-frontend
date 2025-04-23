@@ -23,7 +23,8 @@ export const store = createStore<Estado>({
       projetos: []
     },
     tarefa: {
-      tarefas: []
+      tarefas: [],
+      tarefasFiltradas: []
     }
   },
   mutations: {

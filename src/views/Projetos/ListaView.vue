@@ -33,11 +33,21 @@
         </tr>
       </tbody>
     </table>
-    <ModalComponent  
-      :modal="modal"
-      :projetoId="projetoId"
-      @ao-confirmar-acao-modal="excluir" 
-      @ao-cancelar-acao-modal="fecharModal" />
+    <ModalComponent :mostrar="modal.showModal">
+      <template v-slot:cabecalho>
+        <p class="modal-card-title">{{ modal.titulo }}</p>
+        <button @click="fecharModal" class="delete" aria-label="close"></button>
+      </template>
+      <template v-slot:corpo>
+        <p>{{ modal.texto }}</p>
+      </template>
+      <template v-slot:rodape>
+        <div class="buttons">
+          <button class="button" @click="excluir">{{ modal.labelBotaoConfirma }}</button>
+          <button class="button" @click="fecharModal">{{ modal.labelBotaoCancela }}</button>
+        </div>
+      </template>
+    </ModalComponent>
   </section>
 </template>
 
@@ -54,18 +64,18 @@ import useNotificador from '@/hooks/notificador'
 export default defineComponent({
   name: 'ListaView',
   components: { ModalComponent },
-  emits: ['aoConfirmarAcaoModal', 'aoCancelarAcaoModal'],
   methods: {
     abrirModal(projetoId: string) {
-      this.projetoId = projetoId
+      this.exibirModal = true
+      this.modal.projetoId = projetoId
       this.store.commit(ABRE_MODAL, this.modal)
     },
     fecharModal() {
       // commit é para mutations
       this.store.commit(FECHA_MODAL, this.modal)
     },
-    excluir(projetoId: string) {
-      this.store.dispatch(REMOVER_PROJETO, projetoId)
+    excluir() {
+      this.store.dispatch(REMOVER_PROJETO, this.modal.projetoId)
         .then(() => {
             this.notificar(TipoNotificacao.SUCESSO, 'Projeto deletado', 'Seu projeto e todas as tarefas vinculadas foram deletadas com sucesso.')
         })
@@ -77,7 +87,9 @@ export default defineComponent({
   },
   data() {
     return {
+      exibirModal: false,
       modal: {
+        projetoId: '',
         titulo: 'Excluir Projeto',
         texto: `
           Você tem certeza que deseja excluir esse projeto?
@@ -86,7 +98,6 @@ export default defineComponent({
         labelBotaoConfirma: 'Sim',
         labelBotaoCancela: 'Não',
       } as IModal,
-      projetoId: ''
     }
   },
   created() {
