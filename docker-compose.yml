@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    container_name: alura-tracker-container
+    ports:
+      - "8080:8080"
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: >
+      sh -c "pnpm dlx json-server --watch db.json --port 3000 --host 0.0.0.0 & 
+             pnpm run dev --port 8080 --host 0.0.0.0"
+    # Adicione estas duas linhas para ajudar no debug:
+    stdin_open: true
+    tty: true

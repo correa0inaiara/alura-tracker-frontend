@@ -34,7 +34,7 @@ const rotas: RouteRecordRaw[] = [
   }
 ]
 const roteador = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHashHistory('/alura-tracker/'),
   routes: rotas
 })
 

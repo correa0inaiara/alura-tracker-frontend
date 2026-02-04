@@ -1,3 +1,5 @@
 onlyBuiltDependencies:
   - core-js
   - yorkie
+
+dangerously-allow-all-builds: true
